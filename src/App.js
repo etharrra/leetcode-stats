@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   TextField,
@@ -15,7 +15,6 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
-import html2canvas from 'html2canvas';
 import { toPng, toSvg } from 'html-to-image';
 
 function App() {
@@ -98,15 +97,6 @@ function App() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const downloadAsImage = async (format = 'png') => {
-    const element = document.getElementById('stats-container');
-    const canvas = await html2canvas(element);
-    const link = document.createElement('a');
-    link.download = `leetcode-stats.${format}`;
-    link.href = canvas.toDataURL(`image/${format}`);
-    link.click();
   };
 
   const generateStats = () => {
