@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LeetCode Stats SVG</title>
+  <script>
+    async function loadStats() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const username = urlParams.get('username');
+      
+      if (!username) {
+        document.body.innerHTML = '<p>Username is required. Use ?username=YOUR_USERNAME</p>';
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/${username}`);
+        if (!response.ok) throw new Error('Failed to fetch data');
+        const data = await response.json();
+        
+        const { matchedUser, matchedUserStats, allQuestionsCount } = data;
+        const { submitStats: { acSubmissionNum, totalSubmissionNum } } = matchedUserStats;
+        
+        const totalSolved = acSubmissionNum.find(q => q.difficulty === 'All')?.count || 0;
+        const totalQuestions = allQuestionsCount.find(q => q.difficulty === 'All')?.count || 0;
+        const totalSubmissions = totalSubmissionNum[0]?.submissions || 0;
+
+        const getCount = (difficulty) => 
+          acSubmissionNum.find(q => q.difficulty === difficulty)?.count || 0;
+
+        const easyCount = getCount('Easy');
+        const mediumCount = getCount('Medium');
+        const hardCount = getCount('Hard');
+
+        const svgContent = `<?xml version="1.0" encoding="UTF-8"?>
+        <svg width="600" height="300" viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+            .card { 
+              font-family: 'Roboto', sans-serif;
+              fill: #e0e0e0;
+            }
+            .title { 
+              font-size: 20px; 
+              font-weight: 700; 
+              fill: #00cba4;
+            }
+            .stat { 
+              font-size: 14px; 
+              font-weight: 500;
+            }
+            .stat-value { 
+              font-weight: 700; 
+              fill: #ffffff;
+            }
+            .easy { fill: #00cba4; }
+            .medium { fill: #ffb300; }
+            .hard { fill: #ff5252; }
+          </style>
+          
+          <!-- Card background -->
+          <rect width="580" height="280" x="10" y="10" rx="8" fill="#232b3e" />
+          
+          <!-- Title -->
+          <text x="30" y="45" class="card title">
+            ${matchedUser.profile.realName || username}'s LeetCode Stats
+          </text>
+          
+          <!-- Divider -->
+          <line x1="30" y1="60" x2="570" y2="60" stroke="#222c3c" stroke-width="2" />
+          
+          <!-- Stats -->
+          <g class="card">
+            <text x="30" y="90" class="stat">Ranking: <tspan class="stat-value">${matchedUser.profile.ranking}</tspan></text>
+            <text x="30" y="115" class="stat">Reputation: <tspan class="stat-value">${matchedUser.profile.reputation}</tspan></text>
+            <text x="30" y="140" class="stat">Contribution: <tspan class="stat-value">${matchedUser.contributions.points}</tspan></text>
+            <text x="30" y="165" class="stat">Solved: <tspan class="stat-value">${totalSolved}</tspan> / ${totalQuestions}</text>
+            <text x="30" y="190" class="stat">Submissions: <tspan class="stat-value">${totalSubmissions}</tspan></text>
+            
+            <!-- Difficulty stats -->
+            <text x="300" y="90" class="stat">Easy: <tspan class="stat-value easy">${easyCount}</tspan></text>
+            <text x="300" y="115" class="stat">Medium: <tspan class="stat-value medium">${mediumCount}</tspan></text>
+            <text x="300" y="140" class="stat">Hard: <tspan class="stat-value hard">${hardCount}</tspan></text>
+          </g>
+        </svg>`;
+
+        // Set content type and return the SVG
+        document.body.innerHTML = svgContent;
+        document.contentType = 'image/svg+xml';
+      } catch (error) {
+        document.body.innerHTML = `<p>Error: ${error.message}</p>`;
+      }
+    }
+
+    // Load stats when the page loads
+    window.onload = loadStats;
+  </script>
+</head>
+<body>
+  <p>Loading LeetCode stats...</p>
+</body>
+</html>
