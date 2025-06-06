@@ -79,7 +79,12 @@ function App() {
     setLoading(true);
     setError('');
     try {
-      const response = await fetch(`http://localhost:3000/api/${username}`);
+      const baseUrl = process.env.NODE_ENV === 'production'
+        ? process.env.REACT_APP_API_PRODUCTION_URL
+        : process.env.REACT_APP_API_BASE_URL;
+      const apiUrl = `${baseUrl}/${username}`;
+      
+      const response = await fetch(apiUrl);
       const data = await response.json();
       
       if (data.status !== 200 || !data.data?.matchedUser?.profile?.ranking) {
