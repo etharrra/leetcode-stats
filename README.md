@@ -1,5 +1,7 @@
 # LeetCode Stats Viewer 🚀
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-View%20Live-brightgreen)](https://leetcode-stats-th.netlify.app)
+
 A beautiful, responsive web application that showcases your LeetCode statistics in a clean, card-based interface - perfect for your portfolio or GitHub README. Similar to GitHub Stats Viewer, this project allows you to display your coding journey and problem-solving skills through your LeetCode achievements.
 
 ## 🎯 Purpose
@@ -32,7 +34,7 @@ This project is designed to help developers:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/leetcode-stats.git
+   git clone https://github.com/etharrra/leetcode-stats.git
    cd leetcode-stats
    ```
 
